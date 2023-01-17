@@ -1,19 +1,22 @@
 import { useState } from "react";
-import { MovieCard } from "./components/MovieCard";
 import "./App.css";
 import logo from "./assets/logo.png";
 import searchI from "./assets/search.svg";
+import Pagination from "./components/Pagination";
 
 function App() {
-  const [movies, setMovies] = useState([]);
+  const [page, setPage] = useState(1);
+  const [numPages, setNumPages] = useState(1);
   const [search, setSearch] = useState("");
+  const [totalResults, setTotalResults] = useState(0);
 
   const API_URL = "https://www.omdbapi.com/?apikey=d8cb3a1d";
 
   const searchMovie = async (title) => {
     let response = await fetch(`${API_URL}&s=${title}`);
     let data = await response.json();
-    setMovies(data.Search);
+    setNumPages(Math.ceil(data.totalResults / 10));
+    setTotalResults(data.totalResults || 0);
   };
 
   const searchStyle = {
@@ -45,7 +48,10 @@ function App() {
           <button
             className="btn btn-outline-warning"
             type="button"
-            onClick={() => searchMovie(search)}
+            onClick={() => {
+              searchMovie(search);
+              setPage(1);
+            }}
           >
             <img src={searchI} alt="" />
           </button>
@@ -53,32 +59,23 @@ function App() {
       </div>
       <br />
       {/* End Search Box */}
-      {/* Movies Cards */}
       <div className="container">
         <div className="row">
           <div className="col-12">
             <h3 className="text-center">Movies searched for: {search}</h3>
+            <h3 className="text-center">Search results: {totalResults}</h3>
           </div>
         </div>
       </div>
       <br />
-      <div className="container">
-        <div className="row">
-          {movies === undefined ? (
-            <h3 className="text-center">No movies found</h3>
-          ) : (
-            movies.map((movie) => {
-              return (
-                <div className="col-3">
-                  <MovieCard movie={movie} />
-                </div>
-              );
-            })
-          )}
-        </div>
-      </div>
-
-      {/* End Movies Cards */}
+      {/* Pagination */}
+      <Pagination 
+      title={search}
+      page={page}
+      numPages={numPages}
+      setPage={setPage}
+      />
+      {/* End Pagination */}
     </>
   );
 }
