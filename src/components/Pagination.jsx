@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { MovieCard } from './MovieCard';
 
 function RenderCards({movies}) {
@@ -22,14 +22,6 @@ function RenderCards({movies}) {
 }
 
 const Pagination = (props) => {
-    const API_URL = "https://www.omdbapi.com/?apikey=d8cb3a1d"
-
-    const [movies, setMovies] = useState([]);
-    const searchMovie = async (title, page) => {
-        let response = await fetch(`${API_URL}&s=${title}&page=${page}`);
-        let data = await response.json();
-        setMovies(data.Search);
-      };
     
     const { numPages , page, setPage } = props;
     let sPage,ePage;
@@ -54,19 +46,21 @@ const Pagination = (props) => {
     }
     return (
         <>
+        <RenderCards movies={props.movies} />
         <nav>
             <ul className="pagination justify-content-center">
                 {pages.map(page => (
                     <li key={page} className={page === props.page ? "page-item active" : "page-item"}>
                         <a className="page-link btn" onClick={() => {
                             setPage(page);
-                            searchMovie(props.title,page);
+                            props.searchMovie(props.title,page);
+                            window.scrollTo(0,0);
                         }}>{page}</a>
                     </li>
                 ))}
             </ul>
         </nav>
-        <RenderCards movies={movies} />
+        
         </>
     );
 }

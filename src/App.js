@@ -5,18 +5,20 @@ import searchI from "./assets/search.svg";
 import Pagination from "./components/Pagination";
 
 function App() {
+  const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
   const [search, setSearch] = useState("");
   const [totalResults, setTotalResults] = useState(0);
 
-  const API_URL = "https://www.omdbapi.com/?apikey=d8cb3a1d";
-
-  const searchMovie = async (title) => {
-    let response = await fetch(`${API_URL}&s=${title}`);
+  
+  const searchMovie = async (title,page) => {
+    const API_URL = "https://www.omdbapi.com/?apikey=d8cb3a1d";
+    let response = await fetch(`${API_URL}&s=${title}&page=${page}`);
     let data = await response.json();
     setNumPages(Math.ceil(data.totalResults / 10));
     setTotalResults(data.totalResults || 0);
+    setMovies(data.Search);
   };
 
   const searchStyle = {
@@ -39,7 +41,7 @@ function App() {
           <input
             type="text"
             className="form-control"
-            placeholder="Search for Movies"
+            placeholder="Search for Movies/Series/Episodes"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             aria-label="Search"
@@ -49,8 +51,8 @@ function App() {
             className="btn btn-outline-warning"
             type="button"
             onClick={() => {
-              searchMovie(search);
               setPage(1);
+              searchMovie(search,page);
             }}
           >
             <img src={searchI} alt="" />
@@ -70,8 +72,10 @@ function App() {
       <br />
       {/* Pagination */}
       <Pagination 
+      movies={movies}
       title={search}
       page={page}
+      searchMovie={searchMovie}
       numPages={numPages}
       setPage={setPage}
       />
