@@ -1,7 +1,9 @@
 import React from 'react'
 import { MovieCard } from './MovieCard';
+import Spinner from "./Spinner";
 
 function RenderCards({movies}) {
+    
     return(
         <div className="container">
             <div className="row">
@@ -46,7 +48,8 @@ const Pagination = (props) => {
     }
     return (
         <>
-        <RenderCards movies={props.movies} />
+        {props.isLoading ? <Spinner /> : 
+        <RenderCards movies={props.movies} />}
         <nav>
             <ul className="pagination justify-content-center">
                 {pages.map(page => (

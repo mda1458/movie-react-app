@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState } from "react"
 import "./App.css";
 import logo from "./assets/logo.png";
 import searchI from "./assets/search.svg";
 import Pagination from "./components/Pagination";
 
+
 function App() {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
@@ -13,12 +16,20 @@ function App() {
 
   
   const searchMovie = async (title,page) => {
+    setIsLoading(true);
     const API_URL = "https://www.omdbapi.com/?apikey=d8cb3a1d";
-    let response = await fetch(`${API_URL}&s=${title}&page=${page}`);
-    let data = await response.json();
-    setNumPages(Math.ceil(data.totalResults / 10));
-    setTotalResults(data.totalResults || 0);
-    setMovies(data.Search);
+    fetch(`${API_URL}&s=${title}&page=${page}`)
+    .then((response) => response.json())
+    .then((response) => {
+      setNumPages(Math.ceil(response.totalResults / 10));
+      setTotalResults(response.totalResults || 0);
+      setMovies(response.Search);
+      setIsLoading(false);
+    }).catch((error) => {
+      setErrorMessage("Unable to fetch the items due to some issue! Try Again!");
+      alert(errorMessage+"\nError:\n"+error)
+      setIsLoading(false);
+    }); 
   };
 
   const searchStyle = {
@@ -51,6 +62,7 @@ function App() {
             className="btn btn-outline-warning"
             type="button"
             onClick={() => {
+              setMovies([]);
               setPage(1);
               searchMovie(search,page);
             }}
@@ -72,6 +84,7 @@ function App() {
       <br />
       {/* Pagination */}
       <Pagination 
+      isLoading={isLoading}
       movies={movies}
       title={search}
       page={page}
