@@ -85,7 +85,7 @@ function App() {
       <Pagination 
       isLoading={isLoading}
       movies={movies}
-      title={search}
+      title={search.current.value}
       page={page}
       searchMovie={searchMovie}
       numPages={numPages}
