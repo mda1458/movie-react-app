@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import "./App.css";
 import logo from "./assets/logo.png";
 import searchI from "./assets/search.svg";
@@ -6,12 +6,12 @@ import Pagination from "./components/Pagination";
 
 
 function App() {
+  const search = useRef("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [movies, setMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [numPages, setNumPages] = useState(1);
-  const [search, setSearch] = useState("");
   const [totalResults, setTotalResults] = useState(0);
 
   
@@ -53,8 +53,7 @@ function App() {
             type="text"
             className="form-control"
             placeholder="Search for Movies/Series/Episodes"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            ref={search}
             aria-label="Search"
             aria-describedby="button-addon2"
           />
@@ -64,7 +63,7 @@ function App() {
             onClick={() => {
               setMovies([]);
               setPage(1);
-              searchMovie(search,page);
+              searchMovie(search.current.value,page);
             }}
           >
             <img src={searchI} alt="" />
@@ -76,7 +75,7 @@ function App() {
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <h3 className="text-center">Movies searched for: {search}</h3>
+            <h3 className="text-center">Movies searched for: {search.current.value}</h3>
             <h3 className="text-center">Search results: {totalResults}</h3>
           </div>
         </div>

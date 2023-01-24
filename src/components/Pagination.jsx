@@ -3,7 +3,6 @@ import { MovieCard } from './MovieCard';
 import Spinner from "./Spinner";
 
 function RenderCards({movies}) {
-    
     return(
         <div className="container">
             <div className="row">
