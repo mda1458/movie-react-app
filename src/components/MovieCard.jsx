@@ -5,7 +5,7 @@ export const MovieCard = ({movie}) => {
     height: "500px"
   };
   return (
-    <div className="container" style={moviecardstyle}>
+    <div className="container my-3" style={moviecardstyle}>
       <div className="card">
         <img src={movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/400"} className="card-img-top" alt="" width="33%" height="250px" />
         <div className="card-body">

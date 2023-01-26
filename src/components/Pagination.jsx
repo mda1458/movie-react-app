@@ -11,7 +11,7 @@ function RenderCards({movies}) {
             ) : (
                 movies.map((movie) => {
                 return (
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <MovieCard movie={movie} />
                     </div>
                 );
